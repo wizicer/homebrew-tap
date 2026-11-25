@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run formula helper tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Parse formula with Homebrew Ruby
+        run: brew ruby -e 'require "formulary"; Formulary.from_path("Formula/mlx-stt.rb"); puts "formula parse: ok"'

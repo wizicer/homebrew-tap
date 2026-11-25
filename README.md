@@ -7,15 +7,11 @@
 在 `mlx-stt` 仓库创建 GitHub Release、上传 artifact，并更新本仓库 Formula 后：
 
 ```bash
-brew tap Icer/tap
+brew tap Icer/tap git@github.com:Icer/homebrew-tap.git
 brew install mlx-stt
 ```
 
-或：
-
-```bash
-brew install Icer/tap/mlx-stt
-```
+tap 完成后也可以直接执行 `brew install Icer/tap/mlx-stt`。私人仓库需要本机 SSH key 已获得访问权限。
 
 常用命令：
 

@@ -7,14 +7,16 @@ wizicer 的个人 Homebrew tap，用来分发 macOS 命令行工具和小型应�
 
 ## 使用这个 tap
 
-```bash
-brew tap wizicer/tap git@github.com:wizicer/homebrew-tap.git
-```
-
-之后可以安装 tap 中提供的 Formula：
+不需要先手动 tap，直接用完整名称安装 Formula 即可；Homebrew 会在首次安装时自动添加 `wizicer/tap`：
 
 ```bash
 brew install wizicer/tap/<formula>
+```
+
+如果你明确希望 tap 的 git remote 使用 SSH，也可以先手动添加：
+
+```bash
+brew tap wizicer/tap git@github.com:wizicer/homebrew-tap.git
 ```
 
 ## 可用 Formula

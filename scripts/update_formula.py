@@ -35,33 +35,58 @@ def replace_once(text, pattern, replacement, label):
     return updated
 
 
-def update_formula_text(text, *, version, sha256, url, owner):
+def update_formula_text(
+    text,
+    *,
+    version,
+    sha256_macos15,
+    url_macos15,
+    sha256_macos26,
+    url_macos26,
+    owner,
+):
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?", version):
         raise ValueError("version must look like a semantic version: " + version)
-    if not re.fullmatch(r"[0-9a-f]{64}", sha256):
-        raise ValueError("sha256 must be 64 lowercase hexadecimal characters")
-    if not re.match(r"(https|file)://", url):
-        raise ValueError("url must start with https:// or file://")
+    for label, digest in (("macOS 15", sha256_macos15), ("macOS 26", sha256_macos26)):
+        if not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ValueError(label + " sha256 must be 64 lowercase hexadecimal characters")
+    for label, url in (("macOS 15", url_macos15), ("macOS 26", url_macos26)):
+        if not re.match(r"(https|file)://", url):
+            raise ValueError(label + " url must start with https:// or file://")
 
     updated = text
     updated = replace_once(updated, r'^  homepage ".*"$', '  homepage "https://github.com/{}/mlx-stt"'.format(owner), "homepage")
     updated = replace_once(updated, r'^  version ".*"$', '  version "{}"'.format(version), "version")
-    updated = replace_once(updated, r'^  url ".*"$', '  url "{}"'.format(url), "url")
-    updated = replace_once(updated, r'^  sha256 ".*"$', '  sha256 "{}"'.format(sha256), "sha256")
+    updated = replace_once(
+        updated,
+        r'(on_tahoe :or_newer do\n    url )"[^"]+"\n    sha256 "[^"]+"',
+        r'\g<1>"{}"\n    sha256 "{}"'.format(url_macos26, sha256_macos26),
+        "macOS 26 url/sha256",
+    )
+    updated = replace_once(
+        updated,
+        r'(on_sequoia do\n    url )"[^"]+"\n    sha256 "[^"]+"',
+        r'\g<1>"{}"\n    sha256 "{}"'.format(url_macos15, sha256_macos15),
+        "macOS 15 url/sha256",
+    )
     return updated
 
 
-def release_url(owner, version):
-    artifact = "mlx-stt-{}-macos-arm64.tar.gz".format(version)
+def release_url(owner, version, macos_target):
+    artifact = "mlx-stt-{}-macos{}-arm64.tar.gz".format(version, macos_target)
     return "https://github.com/{}/mlx-stt/releases/download/v{}/{}".format(owner, version, artifact)
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Update or render Formula/mlx-stt.rb")
     parser.add_argument("--version", required=True)
-    parser.add_argument("--sha256", help="artifact sha256; omit when --artifact is supplied")
-    parser.add_argument("--artifact", type=Path, help="local artifact used to compute sha256")
-    parser.add_argument("--url", help="artifact URL; defaults to the GitHub release URL")
+    parser.add_argument("--sha256", help="artifact sha256 used for both macOS targets unless overridden")
+    parser.add_argument("--sha256-macos15", help="macOS 15 artifact sha256")
+    parser.add_argument("--sha256-macos26", help="macOS 26 artifact sha256")
+    parser.add_argument("--artifact", type=Path, help="local artifact used to compute a sha256 for both targets")
+    parser.add_argument("--url", help="artifact URL used for both macOS targets unless overridden")
+    parser.add_argument("--url-macos15", help="macOS 15 artifact URL")
+    parser.add_argument("--url-macos26", help="macOS 26 artifact URL")
     parser.add_argument("--owner", default="wizicer", help="GitHub owner used in homepage and default release URL")
     parser.add_argument("--formula", type=Path, default=DEFAULT_FORMULA, help="input formula path")
     parser.add_argument("--output", type=Path, help="write rendered formula here instead of updating in place")
@@ -69,18 +94,25 @@ def main(argv=None):
 
     if args.sha256 and args.artifact:
         parser.error("pass either --sha256 or --artifact, not both")
-    digest = args.sha256 or (sha256_file(args.artifact.expanduser().resolve()) if args.artifact else None)
-    if digest is None:
-        parser.error("pass --sha256 or --artifact")
-    url = args.url or release_url(args.owner, args.version)
+    artifact_digest = sha256_file(args.artifact.expanduser().resolve()) if args.artifact else None
+    base_digest = args.sha256 or artifact_digest
+    digest_macos15 = args.sha256_macos15 or base_digest
+    digest_macos26 = args.sha256_macos26 or base_digest
+    if digest_macos15 is None or digest_macos26 is None:
+        parser.error("pass --artifact/--sha256 or both --sha256-macos15 and --sha256-macos26")
+
+    url_macos15 = args.url_macos15 or args.url or release_url(args.owner, args.version, "15")
+    url_macos26 = args.url_macos26 or args.url or release_url(args.owner, args.version, "26")
 
     formula = args.formula.expanduser().resolve()
     try:
         rendered = update_formula_text(
             formula.read_text(encoding="utf-8"),
             version=args.version,
-            sha256=digest.lower(),
-            url=url,
+            sha256_macos15=digest_macos15.lower(),
+            url_macos15=url_macos15,
+            sha256_macos26=digest_macos26.lower(),
+            url_macos26=url_macos26,
             owner=args.owner,
         )
     except (OSError, ValueError) as exc:
@@ -91,8 +123,10 @@ def main(argv=None):
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(rendered, encoding="utf-8")
     print("wrote {}".format(destination))
-    print("url: {}".format(url))
-    print("sha256: {}".format(digest.lower()))
+    print("macOS 15 url: {}".format(url_macos15))
+    print("macOS 15 sha256: {}".format(digest_macos15.lower()))
+    print("macOS 26 url: {}".format(url_macos26))
+    print("macOS 26 sha256: {}".format(digest_macos26.lower()))
     return 0
 
 

@@ -1,8 +1,10 @@
 #!/bin/sh
 set -eu
 
+export HOMEBREW_NO_AUTO_UPDATE=1
+
 if [ "$#" -ne 1 ]; then
-  echo "usage: $0 /path/to/mlx-stt-VERSION-macos-arm64.tar.gz" >&2
+  echo "usage: $0 /path/to/mlx-stt-VERSION-macos15-arm64.tar.gz" >&2
   exit 64
 fi
 
@@ -12,7 +14,7 @@ if [ ! -f "$ARCHIVE" ]; then
   exit 66
 fi
 
-VERSION=$(basename "$ARCHIVE" | sed -E 's/^mlx-stt-([^-]+)-macos-arm64\.tar\.gz$/\1/')
+VERSION=$(basename "$ARCHIVE" | sed -E 's/^mlx-stt-([^-]+)-macos(15|26)-arm64\.tar\.gz$/\1/')
 if [ "$VERSION" = "$(basename "$ARCHIVE")" ]; then
   echo "cannot parse version from archive name: $(basename "$ARCHIVE")" >&2
   exit 65

@@ -1,12 +1,21 @@
 class MlxStt < Formula
   desc "Local Chinese speech-to-text CLI powered by MLX and Qwen3-ASR"
   homepage "https://github.com/wizicer/mlx-stt"
-  version "0.1.0"
-  url "https://github.com/wizicer/mlx-stt/releases/download/v0.1.0/mlx-stt-0.1.0-macos-arm64.tar.gz"
-  sha256 "61e9e66fb6218ca60710b981a0c160665c91cc953deb9642ed5ce42b03fcd63b"
+  version "0.1.1"
+
+  on_tahoe :or_newer do
+    url "https://github.com/wizicer/mlx-stt/releases/download/v0.1.1/mlx-stt-0.1.1-macos26-arm64.tar.gz"
+    sha256 "f5ecea97baa96a9c6eadf0313a43f0b923d3b1794fc22b3fcccd691b8a1c6c7e"
+  end
+
+  on_sequoia do
+    url "https://github.com/wizicer/mlx-stt/releases/download/v0.1.1/mlx-stt-0.1.1-macos15-arm64.tar.gz"
+    sha256 "a326866a1607f0fe7ce1301e0ebead296a59be594faa1d89bacbfe510cedddba"
+  end
+
   license "MIT"
 
-  depends_on :macos
+  depends_on macos: :sequoia
   depends_on arch: :arm64
 
   def install

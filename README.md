@@ -72,7 +72,8 @@ tests/                    Formula helper 测试
 ```bash
 python3 scripts/update_formula.py \
   --version <version> \
-  --sha256 <artifact-sha256>
+  --sha256-macos15 <macos15-artifact-sha256> \
+  --sha256-macos26 <macos26-artifact-sha256>
 ```
 
 运行维护者测试：
@@ -84,7 +85,7 @@ python3 -m unittest discover -s tests -v
 本地 artifact 验证：
 
 ```bash
-./scripts/local_brew_test.sh /path/to/mlx-stt-<version>-macos-arm64.tar.gz
+./scripts/local_brew_test.sh /path/to/mlx-stt-<version>-macos15-arm64.tar.gz  # 或 macos26 artifact
 ```
 
 开发 clone：

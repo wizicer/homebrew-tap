@@ -1,65 +1,71 @@
-# mlx-stt Homebrew Tap
+# wizicer Homebrew Tap
 
-`mlx-stt` 的 Homebrew 安装源，让 Apple Silicon Mac 可以一键安装本地中文语音转文字 CLI。
+wizicer 的个人 Homebrew tap，用来分发 macOS 命令行工具和小型应用。当前包含第一个 Formula：[`mlx-stt`](https://github.com/wizicer/mlx-stt)。
 
 [![CI](https://github.com/wizicer/homebrew-tap/actions/workflows/ci.yml/badge.svg)](https://github.com/wizicer/homebrew-tap/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[`mlx-stt`](https://github.com/wizicer/mlx-stt) 基于 MLX、mlx-audio、Qwen3-ASR 和 Qwen3-ForcedAligner，在本地完成语音识别并生成逐字时间戳。这个仓库只负责 Homebrew 分发。
-
-## 安装
+## 使用这个 tap
 
 ```bash
 brew tap wizicer/tap git@github.com:wizicer/homebrew-tap.git
+```
+
+之后可以安装 tap 中提供的 Formula：
+
+```bash
+brew install wizicer/tap/<formula>
+```
+
+## 可用 Formula
+
+| Formula | 说明 | 安装 |
+| --- | --- | --- |
+| `mlx-stt` | Apple Silicon 本地中文语音转文字 CLI，基于 MLX、mlx-audio、Qwen3-ASR 与 ForcedAligner | `brew install wizicer/tap/mlx-stt` |
+
+## mlx-stt 快速示例
+
+```bash
 brew install wizicer/tap/mlx-stt
-```
-
-确认安装：
-
-```bash
 mlx-stt --version
-mlx-stt probe
-```
-
-开始转写：
-
-```bash
 mlx-stt transcribe input.wav -o result.json
 ```
 
-## 使用须知
+`mlx-stt` 仅支持 macOS arm64。首次使用会下载模型；默认模型约 3.75 GB。处理 MP3、M4A 或其他非 WAV 输入前，请安装 `ffmpeg`：
 
-- 仅支持搭载 Apple Silicon 的 macOS arm64。
-- 首次使用会下载模型；默认模型约 3.75 GB。
-- 模型缓存独立于 Homebrew 安装目录，升级不会重复下载，卸载软件也不会删除模型。
-- 如果模型下载较慢，可先执行：
+```bash
+brew install ffmpeg
+```
 
-  ```bash
-  export HF_ENDPOINT=https://hf-mirror.com
-  ```
-
-- 处理 MP3、M4A 或其他非 WAV 输入前，请安装：
-
-  ```bash
-  brew install ffmpeg
-  ```
-
-更多命令和输出格式请查看 [`mlx-stt` 的文档](https://github.com/wizicer/mlx-stt)。
+更多使用方法请查看 [`mlx-stt` 的文档](https://github.com/wizicer/mlx-stt)。
 
 ## 升级与卸载
 
-```bash
-brew upgrade mlx-stt
-```
+升级某个 Formula：
 
 ```bash
-brew uninstall mlx-stt
+brew upgrade <formula>
+```
+
+卸载某个 Formula：
+
+```bash
+brew uninstall <formula>
 ```
 
 <details>
 <summary>维护者说明</summary>
 
-更新 Formula：
+仓库结构：
+
+```text
+Formula/                  每个软件一个 .rb Formula
+scripts/update_formula.py 更新版本、URL 和 sha256
+scripts/local_brew_test.sh 用本地 artifact 验证 mlx-stt Formula
+tests/                    Formula helper 测试
+```
+
+更新 `mlx-stt` Formula：
 
 ```bash
 python3 scripts/update_formula.py \

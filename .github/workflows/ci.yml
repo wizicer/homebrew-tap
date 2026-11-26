@@ -13,4 +13,5 @@ jobs:
       - name: Run formula helper tests
         run: python3 -m unittest discover -s tests -v
       - name: Parse formula with Homebrew Ruby
-        run: brew ruby -e 'require "formulary"; Formulary.from_path("Formula/mlx-stt.rb"); puts "formula parse: ok"'
+        run: |
+          brew ruby -e 'require "formulary"; Formulary.from_path("Formula/mlx-stt.rb"); puts "formula parse: ok"'

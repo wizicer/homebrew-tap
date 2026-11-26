@@ -3,7 +3,7 @@ class MlxStt < Formula
   homepage "https://github.com/wizicer/mlx-stt"
   version "0.1.0"
   url "https://github.com/wizicer/mlx-stt/releases/download/v0.1.0/mlx-stt-0.1.0-macos-arm64.tar.gz"
-  sha256 "f64fd94c8a25f9bb3703b4ed99d3e8bc89ac5bd999fa364a5043d25f88d18d4c"
+  sha256 "61e9e66fb6218ca60710b981a0c160665c91cc953deb9642ed5ce42b03fcd63b"
   license "MIT"
 
   depends_on :macos

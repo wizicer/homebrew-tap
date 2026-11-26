@@ -62,7 +62,7 @@ def main(argv=None):
     parser.add_argument("--sha256", help="artifact sha256; omit when --artifact is supplied")
     parser.add_argument("--artifact", type=Path, help="local artifact used to compute sha256")
     parser.add_argument("--url", help="artifact URL; defaults to the GitHub release URL")
-    parser.add_argument("--owner", default="Icer", help="GitHub owner used in homepage and default release URL")
+    parser.add_argument("--owner", default="wizicer", help="GitHub owner used in homepage and default release URL")
     parser.add_argument("--formula", type=Path, default=DEFAULT_FORMULA, help="input formula path")
     parser.add_argument("--output", type=Path, help="write rendered formula here instead of updating in place")
     args = parser.parse_args(argv)

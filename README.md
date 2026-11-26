@@ -1,17 +1,17 @@
 # homebrew-tap
 
-这是 `mlx-stt` 的私人 Homebrew tap。仓库名保持为 `homebrew-tap` 时，GitHub owner 为 `Icer` 的 tap 名称是 `Icer/tap`。
+这是 `mlx-stt` 的个人 Homebrew tap。仓库名保持为 `homebrew-tap` 时，GitHub owner 为 `wizicer` 的 tap 名称是 `wizicer/tap`。
 
 ## 用户安装
 
 在 `mlx-stt` 仓库创建 GitHub Release、上传 artifact，并更新本仓库 Formula 后：
 
 ```bash
-brew tap Icer/tap git@github.com:Icer/homebrew-tap.git
+brew tap wizicer/tap git@github.com:wizicer/homebrew-tap.git
 brew install mlx-stt
 ```
 
-tap 完成后也可以直接执行 `brew install Icer/tap/mlx-stt`。私人仓库需要本机 SSH key 已获得访问权限。
+tap 完成后也可以直接执行 `brew install wizicer/tap/mlx-stt`。使用 SSH 时需要本机 key 已添加到 GitHub 账户。
 
 常用命令：
 
@@ -84,7 +84,7 @@ python3 scripts/update_formula.py \
   --sha256 <artifact-sha256>
 ```
 
-如果 GitHub owner 不是 `Icer`：
+如果未来 GitHub owner 发生变化：
 
 ```bash
 python3 scripts/update_formula.py \
@@ -105,7 +105,7 @@ python3 -m unittest discover -s tests -v
 推送后建议使用 SSH：
 
 ```bash
-git clone git@github.com:Icer/homebrew-tap.git
+git clone git@github.com:wizicer/homebrew-tap.git
 ```
 
 不要把本地 `file://` Formula、release artifact 或机器绝对路径提交到本仓库。

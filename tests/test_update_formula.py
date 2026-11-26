@@ -13,8 +13,8 @@ spec.loader.exec_module(update_formula)
 class UpdateFormulaTest(unittest.TestCase):
     def test_release_url(self):
         self.assertEqual(
-            update_formula.release_url("Icer", "0.1.0"),
-            "https://github.com/Icer/mlx-stt/releases/download/v0.1.0/mlx-stt-0.1.0-macos-arm64.tar.gz",
+            update_formula.release_url("wizicer", "0.1.0"),
+            "https://github.com/wizicer/mlx-stt/releases/download/v0.1.0/mlx-stt-0.1.0-macos-arm64.tar.gz",
         )
 
     def test_update_formula_text_replaces_release_fields(self):
@@ -41,7 +41,7 @@ class UpdateFormulaTest(unittest.TestCase):
                 version="0.1.0",
                 sha256="not-a-digest",
                 url="https://example.test/a.tar.gz",
-                owner="Icer",
+                owner="wizicer",
             )
 
 
